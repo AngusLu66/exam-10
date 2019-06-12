@@ -1,0 +1,26 @@
+#include <IRremote.h>
+int RECV_PIN = 2;
+IRsend irsend;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+void setup()
+{
+  Serial.begin(9600);
+  // In case the interrupt driver crashes on setup, give a clue
+  // to the user what's going on.
+  Serial.println("Enabling IRin");
+  irrecv.enableIRIn(); // Start the receiver
+  Serial.println("Enabled IRin");
+}
+
+void loop() {
+  irsend.sendNEC(0x06050615, 32);
+    Serial.println("Send");
+    delay(1000); //5 second delay between each signal burst
+
+   if (irrecv.decode(&results)) {
+    Serial.println("1");
+   Serial.println(results.value, HEX);
+    irrecv.resume(); // Receive the next value
+  }
+  delay(100);
